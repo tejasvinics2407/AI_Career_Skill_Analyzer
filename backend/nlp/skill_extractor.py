@@ -32,7 +32,60 @@ SKILL_DATABASE = {
     "Robotic Autonomy": ["robotic autonomy","autonomous robot","autonomous robotics"],
     "Control Systems": ["control systems","control system","controllers"],
     "Mechatronics": ["mechatronics"],
-    "Perception": ["perception"]
+    "Perception": ["perception"],"Mechatronics": ["mechatronics"],
+"Perception": ["perception"],
+
+# Finance & Business
+"Excel": ["excel", "microsoft excel"],
+"Financial Modeling": ["financial modeling", "financial modelling"],
+"Accounting": ["accounting"],
+"Financial Analysis": ["financial analysis"],
+"Power BI": ["power bi"],
+"Data Visualization": ["data visualization", "data visualisation"],
+"Data Analysis": ["data analysis"],
+"Business Analysis": ["business analysis"],
+"Requirements Analysis": ["requirements analysis"],
+
+# Mechanical & Manufacturing
+"CAD": ["cad", "computer aided design"],
+"SolidWorks": ["solidworks", "solid works"],
+"Mechanical Design": ["mechanical design"],
+"Thermodynamics": ["thermodynamics"],
+"Materials Science": ["materials science"],
+"Manufacturing": ["manufacturing"],
+"Engineering Drawing": ["engineering drawing"],
+"CNC": ["cnc", "computer numerical control"],
+"Production Planning": ["production planning"],
+"Quality Control": ["quality control"],
+"Lean Manufacturing": ["lean manufacturing"],
+
+# Civil & Infrastructure
+"AutoCAD": ["autocad", "auto cad"],
+"Structural Analysis": ["structural analysis"],
+"Construction": ["construction"],
+"Surveying": ["surveying"],
+"Concrete Technology": ["concrete technology"],
+"Geotechnical Engineering": ["geotechnical engineering"],
+"STAAD.Pro": ["staad.pro", "staad pro"],
+"Revit": ["revit"],
+"Structural Design": ["structural design"],
+
+# Marketing & UX
+"SEO": ["seo", "search engine optimization"],
+"Content Marketing": ["content marketing"],
+"Social Media Marketing": ["social media marketing"],
+"Google Analytics": ["google analytics"],
+"Digital Advertising": ["digital advertising"],
+"Email Marketing": ["email marketing"],
+"Marketing Analytics": ["marketing analytics"],
+"Figma": ["figma"],
+"UI Design": ["ui design", "user interface design"],
+"UX Design": ["ux design", "user experience design"],
+"User Research": ["user research"],
+"Wireframing": ["wireframing", "wireframes"],
+"Prototyping": ["prototyping", "prototype"],
+"Usability Testing": ["usability testing"]
+
 }
 
 def extract_skills(text):

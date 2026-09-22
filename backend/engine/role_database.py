@@ -1,3 +1,4 @@
+from backend.engine.domain_database import DOMAIN_DATABASE
 ROLE_DATABASE = {
 
     "Machine Learning Engineer": {
@@ -90,10 +91,17 @@ ROLE_DATABASE = {
 
 def get_role_requirements(role):
     """
-    Return the required skills for a selected career role.
+    Return required skills for any role across all domains.
+    Falls back to the original role database.
     """
 
-    if role not in ROLE_DATABASE:
-        raise ValueError(f"Unknown role: {role}")
+    # Check the new multi-domain database first
+    for domain in DOMAIN_DATABASE.values():
+        if role in domain:
+            return domain[role]
 
-    return ROLE_DATABASE[role]["required_skills"]
+    # Fall back to the original database
+    if role in ROLE_DATABASE:
+        return ROLE_DATABASE[role]["required_skills"]
+
+    raise ValueError(f"Unknown role: {role}")

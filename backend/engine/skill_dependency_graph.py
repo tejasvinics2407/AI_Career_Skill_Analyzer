@@ -188,7 +188,8 @@ def get_all_dependencies(
 def build_skill_graph(required_skills):
     """
     Build a directed NetworkX graph containing
-    the required skills and their prerequisites.
+    the required skills and only role-relevant
+    prerequisites.
 
     Edge direction:
 
@@ -203,25 +204,51 @@ def build_skill_graph(required_skills):
 
 
     # -----------------------------------------------------
-    # ADD REQUIRED SKILLS AND DEPENDENCIES
+    # CREATE ROLE SKILL LOOKUP
+    # -----------------------------------------------------
+
+    required_lookup = {
+        skill.lower(): skill
+        for skill in required_skills
+    }
+
+
+    # -----------------------------------------------------
+    # ADD ROLE-RELEVANT SKILLS AND DEPENDENCIES
     # -----------------------------------------------------
 
     def add_skill_with_dependencies(skill):
 
-        # Add the skill itself
-        graph.add_node(skill)
+        # Add the required skill itself
+        graph.add_node(
+            skill
+        )
 
-        # Get prerequisites
         prerequisites = get_prerequisites(
             skill
         )
 
         for prerequisite in prerequisites:
 
+            # -------------------------------------------------
+            # IMPORTANT:
+            # Only include a prerequisite if it is also
+            # required by the selected career role.
+            # -------------------------------------------------
+
+            if (
+                prerequisite.lower()
+                not in required_lookup
+            ):
+
+                continue
+
+
             # Add prerequisite node
             graph.add_node(
                 prerequisite
             )
+
 
             # prerequisite → skill
             graph.add_edge(
@@ -229,7 +256,9 @@ def build_skill_graph(required_skills):
                 skill
             )
 
-            # Recursively add its prerequisites
+
+            # Recursively add only role-relevant
+            # prerequisites.
             add_skill_with_dependencies(
                 prerequisite
             )

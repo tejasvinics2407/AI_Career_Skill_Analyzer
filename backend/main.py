@@ -16,6 +16,7 @@ import shutil
 from backend.nlp.resume_parser import extract_resume_text
 from backend.nlp.skill_extractor import extract_skills
 from backend.nlp.evidence_analyzer import analyze_skill_evidence
+from backend.nlp.semantic_matcher import SemanticSkillMatcher
 
 
 # =========================================================
@@ -69,6 +70,7 @@ app = FastAPI(
     description="AI-powered career skill gap analysis system",
     version="1.0.0"
 )
+semantic_matcher = SemanticSkillMatcher()
 
 
 # =========================================================
@@ -167,6 +169,10 @@ async def analyze_resume(
     required_skills = get_role_requirements(
         role
     )
+    semantic_analysis = semantic_matcher.analyze_skills(
+    student_skills,
+    required_skills
+)
 
 
     # -----------------------------------------------------
@@ -322,18 +328,23 @@ async def analyze_resume(
         "required_skills": required_skills,
 
         "skills_you_have": (
-            skill_gap["skills_you_have"]
-        ),
+    skill_gap["skills_you_have"]
+),
 
-        "skills_missing": (
-            skill_gap["skills_missing"]
-        ),
+"skills_semantically_related": (
+    skill_gap["skills_semantically_related"]
+),
+
+"skills_missing": (
+    skill_gap["skills_missing"]
+),
 
         "minimum_skill_path": (
             minimum_skill_path
         ),
 
-        "skill_evidence": skill_evidence
+        "skill_evidence": skill_evidence,
+    "semantic_analysis": semantic_analysis
 
     }
 
@@ -532,8 +543,6 @@ def get_skill_dependency_graph(
             role
         )
     )
-
-
     graph_data = get_graph_data(
         required_skills
     )

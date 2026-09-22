@@ -3,6 +3,11 @@ import requests
 import networkx as nx
 import plotly.graph_objects as go
 
+from backend.engine.domain_database import (
+    get_domains,
+    get_roles
+)
+
 
 # =========================================================
 # PAGE CONFIGURATION
@@ -112,16 +117,14 @@ with col1:
 
 with col2:
 
+    domain = st.selectbox(
+        "🌐 Select your career domain",
+        get_domains()
+    )
+
     role = st.selectbox(
-        "Select your target career role",
-        [
-            "Machine Learning Engineer",
-            "AI Engineer",
-            "Data Scientist",
-            "Software Developer",
-            "Data Analyst",
-            "Robotics Engineer"
-        ]
+        "🎯 Select your target career role",
+        get_roles(domain)
     )
 
 
@@ -240,6 +243,11 @@ if st.session_state.analysis_result is not None:
     required_skills = result["required_skills"]
 
     skills_you_have = result["skills_you_have"]
+
+    skills_semantically_related = result.get(
+        "skills_semantically_related",
+        []
+    )
 
     skills_missing = result["skills_missing"]
 
@@ -388,6 +396,36 @@ if st.session_state.analysis_result is not None:
             st.success(
                 "No skill gaps detected!"
             )
+
+
+    # -----------------------------------------------------
+    # SEMANTICALLY RELATED SKILLS
+    # -----------------------------------------------------
+
+    st.subheader(
+        "🔗 Semantically Related Skills"
+    )
+
+    if skills_semantically_related:
+
+        st.write(
+            "The AI identified skills in your resume "
+            "that are semantically related to required skills."
+        )
+
+        for item in skills_semantically_related:
+
+            st.info(
+                f"≈ {item['related_skill']} "
+                f"→ {item['required_skill']} "
+                f"(Similarity: {item['similarity']:.3f})"
+            )
+
+    else:
+
+        st.info(
+            "No strong semantic relationships detected."
+        )
 
 
     st.divider()

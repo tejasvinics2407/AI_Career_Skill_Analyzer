@@ -10,9 +10,12 @@ def calculate_minimum_skill_path(
     """
     Calculate a dependency-aware learning path.
 
-    Only skills that are required by the target role
-    or are prerequisites of those required skills
-    are considered.
+    Only skills required by the target role are considered.
+    A prerequisite is included only when that prerequisite
+    is also part of the target role's required skills.
+
+    This prevents skills from unrelated domains from being
+    added to the learning path.
     """
 
     # -----------------------------------------------------
@@ -22,6 +25,16 @@ def calculate_minimum_skill_path(
     current = {
         skill.lower()
         for skill in current_skills
+    }
+
+
+    # -----------------------------------------------------
+    # ROLE-RELEVANT SKILL SET
+    # -----------------------------------------------------
+
+    required_lookup = {
+        skill.lower(): skill
+        for skill in required_skills
     }
 
 
@@ -47,13 +60,17 @@ def calculate_minimum_skill_path(
 
         for prerequisite in prerequisites:
 
-            collect_dependencies(
-                prerequisite
-            )
+            # Only include prerequisites that
+            # belong to this target role.
+            if prerequisite.lower() in required_lookup:
+
+                collect_dependencies(
+                    prerequisite
+                )
 
 
-    # Collect required skills and
-    # everything they depend on.
+    # Collect required skills and only
+    # role-relevant dependencies.
 
     for skill in required_skills:
 
@@ -88,7 +105,7 @@ def calculate_minimum_skill_path(
             return
 
 
-        # Add prerequisites first
+        # Add role-relevant prerequisites first
         prerequisites = get_prerequisites(
             skill
         )
@@ -105,7 +122,7 @@ def calculate_minimum_skill_path(
                 )
 
 
-        # Add the actual skill
+        # Add actual skill
         if skill_lower not in current:
 
             learning_path.append(
