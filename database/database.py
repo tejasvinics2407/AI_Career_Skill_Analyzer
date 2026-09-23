@@ -63,3 +63,10 @@ def get_db():
     finally:
 
         db.close()
+# =========================================================
+# CREATE DATABASE TABLES
+# =========================================================
+
+from database import models
+
+Base.metadata.create_all(bind=engine)
