@@ -344,6 +344,91 @@ if st.session_state.analysis_result is not None:
 
     st.divider()
 
+    
+    
+    # =====================================================
+    # WHAT-IF CAREER READINESS SIMULATOR
+    # =====================================================
+
+    st.header("🔮 What-If Career Readiness Simulator")
+
+    st.write(
+        "Explore how learning a missing skill could change "
+        "your skill-match score for this career."
+    )
+
+    from backend.simulator.readiness_simulator import (
+        simulate_learning_skill,
+    )
+
+    if skills_missing and required_skills:
+        selected_skill = st.selectbox(
+            "Which skill would you like to learn?",
+            skills_missing,
+            key="what_if_skill",
+        )
+
+        if st.button(
+            "🚀 Simulate Learning This Skill",
+            key="run_what_if_simulation",
+            use_container_width=True,
+        ):
+            try:
+                result = simulate_learning_skill(
+                    required_skills=required_skills,
+                    known_skills=skills_you_have,
+                    skill_to_learn=selected_skill,
+                )
+
+                st.session_state["what_if_result"] = result
+
+            except (ValueError, TypeError) as error:
+                st.session_state.pop("what_if_result", None)
+                st.error(f"Unable to run simulation: {error}")
+
+        result = st.session_state.get("what_if_result")
+
+        if result:
+            st.subheader("📊 Projected Career Readiness")
+
+            col1, col2, col3 = st.columns(3)
+
+            col1.metric(
+                "Current Score",
+                f"{result['current_score']:.1f}%",
+            )
+
+            col2.metric(
+                "Projected Score",
+                f"{result['projected_score']:.1f}%",
+                delta=f"+{result['improvement']:.1f}%",
+            )
+
+            col3.metric(
+                "Skill Selected",
+                result["skill_to_learn"],
+            )
+
+            st.progress(
+                min(
+                    max(result["projected_score"] / 100, 0.0),
+                    1.0,
+                )
+            )
+
+            st.info(
+                "This projection assumes you learn the selected skill. "
+                "It estimates skill coverage; it does not measure "
+                "actual proficiency or guarantee employability."
+            )
+
+    else:
+        st.info(
+            "The simulator requires a target role with required skills "
+            "and at least one missing skill."
+        )
+
+    st.divider()
 
     # =====================================================
     # SKILL GAP
